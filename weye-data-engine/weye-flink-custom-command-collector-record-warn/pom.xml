@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>weye-data-engine</artifactId>
+        <groupId>cn.lancedai</groupId>
+        <version>0.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>weye-flink-custom-command-collector-record-warn</artifactId>
+
+    <build>
+        <plugins>
+            <!-- Embed dependencies inside the final JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.apache.flink:force-shading</exclude>
+                            <exclude>com.google.code.findbugs:jsr305</exclude>
+                            <exclude>org.slf4j:*</exclude>
+                            <exclude>log4j:*</exclude>
+                        </excludes>
+                    </artifactSet>
+                    <filters>
+                        <filter>
+                            <!-- Do not copy the signatures in the META-INF folder.
+                            Otherwise, this might cause SecurityExceptions when using the JAR. -->
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>cn.lancedai.weye.data.warn.command.CustomCommandCollectorRecordWarnFunction
+                            </mainClass>
+                        </transformer>
+                    </transformers>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

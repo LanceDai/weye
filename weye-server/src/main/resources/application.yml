@@ -1,0 +1,88 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: weye-server
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url:
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    #连接池的配置信息
+    druid:
+      initial-size: 8
+      min-idle: 1
+      max-active: 20
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-timeMillis: 300000
+      validation-query: select 'x' FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      use-global-data-source-stat: true
+
+  #  kafka相关配置
+  kafka:
+    listener:
+      missing-topics-fatal: false
+    bootstrap-servers:
+    producer:
+      acks: all
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: cn.lancedai.weye.common.serializer.kafka.RecordSerializer
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      auto-commit-interval: 20000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: cn.lancedai.weye.common.serializer.kafka.RecordDeserializer
+
+#logging 配置
+logging:
+  level:
+    cn.lancedai.weye.server.mapper: warn
+    cn.lancedai.weye.*: debug
+    io.netty: warn
+    org.apache.kafka: warn
+    org.spring: warn
+    org.xnio: warn
+    io.undertow: warn
+    org.quartz: warn
+    com.alibaba: warn
+
+
+
+#应用配置
+weye:
+  server:
+    username: admin
+    password: admin
+    expiration-time: 1d
+    process-center-port: 40990
+    version: @project.version@
+    flink-server-config:
+      ssh-host:
+      ssh-port: 22
+      username:
+      password:
+      execute-path:
+      job-download-url:
+
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

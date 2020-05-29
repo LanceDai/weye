@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lancedai.weye.server.mapper.relation.CustomCommandSubscribeMapper">
+    <select id="getFullSubscribe" resultType="cn.lancedai.weye.server.DTO.FullSubscribe">
+        SELECT A.ID        AS SUBSCRIBE_ID,
+               B.SERVER_ID AS SERVER_ID,
+               C.COMMAND   AS COMMAND,
+               C.DURATION  AS DURATION
+        FROM WEYE.CUSTOM_COMMAND_SUBSCRIBE AS A,
+             WEYE.WEB_APP AS B,
+             WEYE.CUSTOM_COMMAND AS C
+        WHERE A.WEB_APP_ID = B.ID
+          AND A.CUSTOM_COMMAND_ID = C.ID
+          AND A.ID = #{subscribeId}
+    </select>
+    <select id="getSubscribeCommandInfos" resultType="cn.lancedai.weye.server.VO.SubscribeCommandInfo">
+        SELECT CUSTOM_COMMAND_SUBSCRIBE.ID AS SUBSCRIBE_ID,
+               CUSTOM_COMMAND.ID           AS CUSTOM_COMMAND_ID,
+               NAME,
+               COMMAND,
+               DURATION
+        FROM WEYE.CUSTOM_COMMAND
+                 INNER JOIN
+             WEYE.CUSTOM_COMMAND_SUBSCRIBE
+             ON CUSTOM_COMMAND.ID = CUSTOM_COMMAND_ID
+        WHERE WEB_APP_ID = #{webAppId}
+    </select>
+</mapper>

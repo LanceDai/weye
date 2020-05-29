@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lancedai.weye.server.mapper.record.ComputeRecordMapper">
+    <select id="getAllComputeRecordByWebAppId" resultType="cn.lancedai.weye.server.VO.ComputeData">
+        SELECT COMPUTE_RECORD.ID        AS RECORD_ID,
+               COMPUTE_RECORD.DATA      AS DATA,
+               COMPUTE_RECORD.TIMESTAMP AS TIMESTAMP,
+               COMPUTE_RULE.ID          AS COMPUTE_RULE_ID,
+               COMPUTE_RULE.NAME        AS COMPUTE_RULE_NAME
+        FROM WEYE.COMPUTE_RULE
+                 INNER JOIN
+             WEYE.COMPUTE_RECORD
+             ON COMPUTE_RULE.ID = COMPUTE_RECORD.COMPUTE_RULE_ID
+        WHERE WEB_APP_ID = #{webAppId}
+        ORDER BY TIMESTAMP DESC
+    </select>
+</mapper>

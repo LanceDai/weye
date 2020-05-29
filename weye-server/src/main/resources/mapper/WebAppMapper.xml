@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lancedai.weye.server.mapper.WebAppMapper">
+    <select id="getWebAppInfos" resultType="cn.lancedai.weye.server.VO.WebAppInfo">
+        SELECT WEB_APP.ID          AS ID,
+               WEB_APP.NAME        AS NAME,
+               WEB_APP.PORT        AS PORT,
+               (
+                   SELECT COUNT(*)
+                   FROM WEYE.WARN_RULE
+                            INNER JOIN
+                        WEYE.WARN_RECORD
+                        ON WARN_RULE.ID = WARN_RULE_ID
+                   WHERE WARN_RULE.WEB_APP_ID = WEB_APP.ID
+               )                   AS WARN_MSG_NUM,
+               SERVER.AGENT_STATUS AS AGENT_STATUS,
+               SERVER.ID           AS SERVER_ID,
+               SERVER.IP           AS SERVER_IP,
+               SERVER.NAME         AS SERVER_NAME
+        FROM WEYE.WEB_APP
+                 INNER JOIN
+             WEYE.SERVER ON WEB_APP.SERVER_ID = SERVER.ID;
+    </select>
+    <select id="getWebAppInfosByServerId" resultType="cn.lancedai.weye.server.VO.WebAppInfo">
+        SELECT WEB_APP.ID          AS ID,
+               WEB_APP.NAME        AS NAME,
+               WEB_APP.PORT        AS PORT,
+               (
+                   SELECT COUNT(*)
+                   FROM WEYE.WARN_RULE
+                            INNER JOIN
+                        WEYE.WARN_RECORD
+                        ON WARN_RULE.ID = WARN_RULE_ID
+                   WHERE WARN_RULE.WEB_APP_ID = WEB_APP.ID
+               )                   AS WARN_MSG_NUM,
+               SERVER.AGENT_STATUS AS AGENT_STATUS,
+               SERVER.ID           AS SERVER_ID,
+               SERVER.IP           AS SERVER_IP,
+               SERVER.NAME         AS SERVER_NAME
+        FROM WEYE.WEB_APP
+                 INNER JOIN
+             WEYE.SERVER ON WEB_APP.SERVER_ID = SERVER.ID
+        WHERE WEB_APP.SERVER_ID = #{serverId};
+    </select>
+    <select id="getSuccessWebAppCounts" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM WEYE.WEB_APP
+        WHERE (
+                  SELECT COUNT(*)
+                  FROM WEYE.WARN_RULE
+                           INNER JOIN
+                       WEYE.WARN_RECORD
+                       ON WARN_RULE.ID = WARN_RULE_ID
+                  WHERE WARN_RULE.WEB_APP_ID = WEB_APP.ID
+              ) = 0
+          AND SERVER_ID in (
+            select SERVER.ID
+            from WEYE.SERVER
+        );
+    </select>
+    <select id="getWarnWebAppCounts" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM WEYE.WEB_APP
+        WHERE (
+                  SELECT COUNT(*)
+                  FROM WEYE.WARN_RULE
+                           INNER JOIN
+                       WEYE.WARN_RECORD
+                       ON WARN_RULE.ID = WARN_RULE_ID
+                  WHERE WARN_RULE.WEB_APP_ID = WEB_APP.ID
+              ) > 0;
+    </select>
+    <select id="getWebAppDetailById" resultType="cn.lancedai.weye.server.VO.WebAppInfo">
+        SELECT WEB_APP.ID          AS ID,
+               WEB_APP.NAME        AS NAME,
+               WEB_APP.PORT        AS PORT,
+               (
+                   SELECT COUNT(*)
+                   FROM WEYE.WARN_RULE
+                            INNER JOIN
+                        WEYE.WARN_RECORD
+                        ON WARN_RULE.ID = WARN_RULE_ID
+                   WHERE WARN_RULE.WEB_APP_ID = WEB_APP.ID
+               )                   AS WARN_MSG_NUM,
+               SERVER.AGENT_STATUS AS AGENT_STATUS,
+               SERVER.ID           AS SERVER_ID,
+               SERVER.IP           AS SERVER_IP,
+               SERVER.NAME         AS SERVER_NAME
+        FROM WEYE.WEB_APP
+                 INNER JOIN
+             WEYE.SERVER ON WEB_APP.SERVER_ID = SERVER.ID
+        where WEB_APP.id = #{webAppId};
+    </select>
+</mapper>

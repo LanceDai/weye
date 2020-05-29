@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lancedai.weye.server.mapper.record.WarnRecordMapper">
+
+    <select id="getUnhandledFullWarnRecords" resultType="cn.lancedai.weye.server.DTO.FullWarnRecord">
+        SELECT A.ID       AS WARN_RECORD_ID,
+               A.TIMESTAMP   TIMESTAMP,
+               C.NAME     AS WEB_APP_NAME,
+               B.NAME     AS WEB_RULE_NAME,
+               B.WARN_MSG AS WARN_MSG
+        FROM WEYE.WARN_RECORD AS A,
+             WEYE.WARN_RULE AS B,
+             WEYE.WEB_APP AS C
+        WHERE A.STATUS = 0
+          AND A.WARN_RULE_ID = B.ID
+          AND B.WEB_APP_ID = C.ID
+        ORDER BY TIMESTAMP DESC
+
+    </select>
+    <select id="getUnhandledFullWarnRecordsWithNum" resultType="cn.lancedai.weye.server.DTO.FullWarnRecord">
+        SELECT A.ID       AS WARN_RECORD_ID,
+               A.TIMESTAMP   TIMESTAMP,
+               C.NAME     AS WEB_APP_NAME,
+               B.NAME     AS WEB_RULE_NAME,
+               B.WARN_MSG AS WARN_MSG
+        FROM WEYE.WARN_RECORD AS A,
+             WEYE.WARN_RULE AS B,
+             WEYE.WEB_APP AS C
+        WHERE A.STATUS = 0
+          AND A.WARN_RULE_ID = B.ID
+          AND B.WEB_APP_ID = C.ID
+        ORDER BY TIMESTAMP DESC
+        LIMIT #{NUM}
+    </select>
+    <select id="getUnhandledFullWarnRecordCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM WEYE.WARN_RECORD AS A,
+             WEYE.WARN_RULE AS B,
+             WEYE.WEB_APP AS C
+        WHERE A.STATUS = 0
+          AND A.WARN_RULE_ID = B.ID
+          AND B.WEB_APP_ID = C.ID
+    </select>
+    <select id="getAllWarnMsgByWebAppId" resultType="cn.lancedai.weye.server.VO.WarnMsg">
+        SELECT A.ID       AS ID,
+               A.TIMESTAMP   TIMESTAMP,
+               B.NAME     AS WARN_RULE_NAME,
+               B.ID       AS WARN_RUID_ID,
+               A.STATUS,
+               B.WARN_MSG AS MSG
+        FROM WEYE.WARN_RECORD AS A,
+             WEYE.WARN_RULE AS B
+        WHERE A.WARN_RULE_ID = B.ID
+          AND A.STATUS = 0
+          AND B.WEB_APP_ID = #{webAppId}
+        ORDER BY TIMESTAMP DESC
+    </select>
+</mapper>
