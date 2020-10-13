@@ -60,7 +60,7 @@
         <!--test-->
         <scala.test.version>3.0.5</scala.test.version>
         <pegdown.version>1.6.0</pegdown.version>
-        <junit.version>4.13</junit.version>
+        <junit.version>4.13.1</junit.version>
         <!--plugin-->
         <scala.maven.plugin.version>4.3.0</scala.maven.plugin.version>
         <scalatest.maven.plugin.version>2.0.0</scalatest.maven.plugin.version>
