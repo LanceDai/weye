@@ -33,7 +33,7 @@
         <!--serializer-->
         <kryo.version>2.24.0</kryo.version>
         <kryo.serializers.version>0.26</kryo.serializers.version>
-        <fast.json.version>1.2.62</fast.json.version>
+        <fast.json.version>1.2.83</fast.json.version>
         <logback.version>1.2.3</logback.version>
         <reflections.version>0.9.12</reflections.version>
         <pcap4j.version>1.8.2</pcap4j.version>
